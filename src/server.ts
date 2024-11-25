@@ -1,16 +1,38 @@
+import dotenv from 'dotenv';
 import express from 'express';
-import { json } from 'body-parser';
+import mongoose from 'mongoose';
+import userRouter from './routes/user';
+dotenv.config();
+
+const { PORT, MONGO_SERVER } = process.env;
+
+/* ------------------------------------------------------------------- */
 
 const app = express();
-const port = process.env.PORT || 3000;
 
-app.use(json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Простейший маршрут
-app.get('/', (_req, res) => {
-  res.send('Hello, World!');
-});
+if (!MONGO_SERVER) {
+  throw new Error('MONGO_SERVER environment variable is not defined.');
+}
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+mongoose
+  .connect(MONGO_SERVER as string)
+  .then(() => {
+    console.log(`Mongoose started ${MONGO_SERVER}`);
+  })
+  .catch((err: Error) => {
+    if (err instanceof mongoose.Error) {
+      console.error('Connection to MongoDB failed:', err.message);
+    } else {
+      console.error('An unexpected error occurred:', err.message);
+    }
+    process.exit(1);
+  });
+
+app.use('/', userRouter);
+
+app.listen(PORT ? PORT : 3000, () => {
+  console.log(`App listening on port ${PORT ?? 3000}`);
 });

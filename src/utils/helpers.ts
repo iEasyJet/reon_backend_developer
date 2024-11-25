@@ -1,0 +1,99 @@
+import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
+import cryptojs from 'crypto-js';
+import { Request } from 'express';
+
+/* ------------------------------------------------------------------- */
+import * as CONSTS from './consts';
+import { IUserModel } from '../controllers/types';
+
+dotenv.config();
+
+const { NODE_ENV, SIMPLE_SECRET_KEY, TOKEN_SECRET_KEY } = process.env;
+
+export function checkSecretKeys() {
+  let secretKey: string;
+
+  if (NODE_ENV === 'dev') {
+    if (!SIMPLE_SECRET_KEY) {
+      throw new Error(CONSTS.SIMPLE_SECRET_KEY_IS_NOT_DEFINED);
+    }
+    secretKey = SIMPLE_SECRET_KEY;
+  } else {
+    if (!TOKEN_SECRET_KEY) {
+      throw new Error(CONSTS.TOKEN_SECRET_KEY_IS_NOT_DEFINED);
+    }
+    secretKey = TOKEN_SECRET_KEY;
+  }
+
+  return secretKey;
+}
+
+export function encryptPassword(password: string) {
+  const secretKey = checkSecretKeys();
+  try {
+    return cryptojs.AES.encrypt(password, secretKey).toString();
+  } catch (err) {
+    throw new Error(CONSTS.ERR_CRYPTO_ENCRYPT_PASSWORD);
+  }
+}
+
+export function decryptPassword(password: string) {
+  const secretKey = checkSecretKeys();
+  try {
+    return cryptojs.AES.decrypt(password, secretKey).toString(
+      cryptojs.enc.Utf8
+    );
+  } catch (err) {
+    throw new Error(CONSTS.ERR_CRYPTO_DECRYPT_PASSWORD);
+  }
+}
+
+export function createToken(userId: string) {
+  const secretKey = checkSecretKeys();
+  try {
+    return jwt.sign({ id: userId }, secretKey, { expiresIn: '7d' });
+  } catch (error) {
+    throw new Error(CONSTS.ERR_JWT_SIGN_TOKEN);
+  }
+}
+
+export function getTokenFromReqHeaders(req: Request) {
+  const { authorization } = req.headers;
+
+  if (authorization) {
+    return authorization.split(' ')[1];
+  } else {
+    throw new Error(CONSTS.AUTH_HEADERS_IS_NOT_DEFINED);
+  }
+}
+
+export function decodeToken(req: Request) {
+  const secretKey = checkSecretKeys();
+
+  try {
+    let userId: string;
+    const token = getTokenFromReqHeaders(req);
+    const decoded = jwt.verify(token, secretKey);
+    if (typeof decoded === 'object' && 'id' in decoded) {
+      userId = decoded.id;
+    } else {
+      throw new Error(CONSTS.ERR_JWT_PALOAD_IS_NOT_DEFINED);
+    }
+    return userId;
+  } catch {
+    throw new Error(CONSTS.ERR_JWT_VERIFY_TOKEN);
+  }
+}
+
+export function createAnswerUser(user: IUserModel, token?: string) {
+  return {
+    user: {
+      id: user._id,
+      name: user.name,
+      role: user.role,
+      status: user.status,
+    },
+    token: token ?? undefined,
+  };
+}
