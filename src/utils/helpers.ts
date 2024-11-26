@@ -2,14 +2,16 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import cryptojs from 'crypto-js';
 import { Request } from 'express';
-
 /* ------------------------------------------------------------------- */
+import User from '../models/user';
 import * as CONSTS from './consts';
-import { IUserModel } from '../controllers/types';
+import { IUserModel } from './types/user/types';
+import Forbidden from '../errors/Forbidden';
 
 dotenv.config();
 
 const { NODE_ENV, SIMPLE_SECRET_KEY, TOKEN_SECRET_KEY } = process.env;
+/* ------------------------------------------------------------------- */
 
 export function checkSecretKeys() {
   let secretKey: string;
@@ -96,4 +98,13 @@ export function createAnswerUser(user: IUserModel, token?: string) {
     },
     token: token ?? undefined,
   };
+}
+
+export async function hasAccessForDelete(req: Request) {
+  const reqUserId = decodeToken(req);
+  const reqUser = await User.findById(reqUserId);
+
+  if (reqUser?.role !== 'admin') {
+    throw new Forbidden(CONSTS.ERR_FORBIDDEN_NO_RIGHTS_FOR_DELETE_USER);
+  }
 }

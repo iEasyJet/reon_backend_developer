@@ -1,5 +1,5 @@
 import { InferRawDocType, Types } from 'mongoose';
-import { userSchemaDefinition } from '../models/user';
+import { userSchemaDefinition } from '../../../models/user';
 
 /* ------------------------------------------------------------------- */
 
