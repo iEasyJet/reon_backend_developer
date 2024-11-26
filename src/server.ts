@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
 import singleRouter from './routes/singleRouter';
+import { singleHandlerErrors } from './middlewars/singleHandlerErrors';
+import { initAdmin } from './controllers/user/initAdmin';
 dotenv.config();
 
 const { PORT, MONGO_SERVER } = process.env;
@@ -19,8 +21,9 @@ if (!MONGO_SERVER) {
 
 mongoose
   .connect(MONGO_SERVER as string)
-  .then(() => {
+  .then(async () => {
     console.log(`Mongoose started ${MONGO_SERVER}`);
+    await initAdmin();
   })
   .catch((err: Error) => {
     if (err instanceof mongoose.Error) {
@@ -33,6 +36,8 @@ mongoose
 
 app.use('/', singleRouter);
 
-app.listen(PORT ? PORT : 3000, () => {
+app.use(singleHandlerErrors);
+
+app.listen(PORT ?? 3000, () => {
   console.log(`App listening on port ${PORT ?? 3000}`);
 });

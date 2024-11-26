@@ -2,7 +2,8 @@ export const ERR_SERVER = 'На сервере произошла ошибка';
 export const USER_DELETED = 'Пользователь удален';
 export const BOARD_DELETED = 'Доска удалена';
 export const TASK_DELETED = 'Задача удалена';
-
+export const CREATE_ADMIN = 'Администратор создан!';
+export const ADMIN_IS_HERE = 'Администратор уже есть в БД!';
 /* CryptoJS */
 export const ERR_CRYPTO_ENCRYPT_PASSWORD = 'Ошибка при шифровании пароля';
 export const ERR_CRYPTO_DECRYPT_PASSWORD = 'Ошибка при дешифровании пароля';

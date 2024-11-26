@@ -10,7 +10,7 @@ import { deleteUser } from '../controllers/user/deleteUser';
 
 const router = express.Router();
 
-router.post('/create', createUser);
+router.post('/create', verifyToken, createUser);
 router.post('/login', loginUser);
 router.post('/auth', verifyToken, checkToken);
 
