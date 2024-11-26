@@ -7,6 +7,7 @@ import User from '../models/user';
 import * as CONSTS from './consts';
 import { IUserModel } from './types/user/types';
 import Forbidden from '../errors/Forbidden';
+import { IBoardModel } from './types/board/types';
 
 dotenv.config();
 
@@ -94,17 +95,35 @@ export function createAnswerUser(user: IUserModel, token?: string) {
       id: user._id,
       name: user.name,
       role: user.role,
-      status: user.status,
+      isActive: user.isActive,
     },
     token: token ?? undefined,
   };
 }
 
-export async function hasAccessForDelete(req: Request) {
+export async function hasAccess(req: Request, errorMessage: string) {
   const reqUserId = decodeToken(req);
   const reqUser = await User.findById(reqUserId);
 
   if (reqUser?.role !== 'admin') {
-    throw new Forbidden(CONSTS.ERR_FORBIDDEN_NO_RIGHTS_FOR_DELETE_USER);
+    throw new Forbidden(errorMessage);
   }
+}
+
+export function getUserId(req: Request) {
+  return decodeToken(req);
+}
+
+export function createAnswerBoard(board: IBoardModel) {
+  return {
+    board: {
+      id: board._id,
+      name: board.name,
+      description: board.description,
+      creatorId: board.creatorId,
+      isActive: board.isActive,
+      pinnedUsers: board.pinnedUsers,
+      createdAt: board.createdAt,
+    },
+  };
 }

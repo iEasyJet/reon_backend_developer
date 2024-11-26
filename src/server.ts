@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
-import userRouter from './routes/user';
+import singleRouter from './routes/singleRouter';
 dotenv.config();
 
 const { PORT, MONGO_SERVER } = process.env;
@@ -31,7 +31,7 @@ mongoose
     process.exit(1);
   });
 
-app.use('/', userRouter);
+app.use('/', singleRouter);
 
 app.listen(PORT ? PORT : 3000, () => {
   console.log(`App listening on port ${PORT ?? 3000}`);

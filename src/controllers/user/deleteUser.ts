@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 /* ------------------------------------------------------------------- */
-import { hasAccessForDelete } from '../../utils/helpers';
+import { hasAccess } from '../../utils/helpers';
 import NotFoundError from '../../errors/NotFoundError';
 import * as CONSTS from '../../utils/consts';
 import User from '../../models/user';
@@ -13,7 +13,7 @@ export async function deleteUser(
 ) {
   const { userId } = req.params;
   try {
-    await hasAccessForDelete(req);
+    await hasAccess(req, CONSTS.ERR_FORBIDDEN_NO_RIGHTS_FOR_DELETE_USER);
     const user = await User.findByIdAndDelete(userId);
     if (!user) {
       throw new NotFoundError(CONSTS.ERR_NFE_USER);

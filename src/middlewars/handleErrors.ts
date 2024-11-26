@@ -8,7 +8,7 @@ export function handleErrors(err: any, next: NextFunction) {
   if (err instanceof ValidationError) {
     next(new ValidationError(CONSTS.ERR_VE));
   } else if (err instanceof MongooseError) {
-    next(new ConflictError(CONSTS.ERR_CE_USER));
+    next(new ConflictError(CONSTS.ERR_CE));
   } else {
     next(err);
   }

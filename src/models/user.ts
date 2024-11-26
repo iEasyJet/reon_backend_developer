@@ -17,15 +17,12 @@ export const userSchemaDefinition = {
   },
   role: {
     type: String,
-    required: true,
     enum: ['admin', 'user'],
     default: 'user',
   },
-  status: {
-    type: String,
-    required: true,
-    enum: ['active', 'inactive'],
-    default: 'active',
+  isActive: {
+    type: Boolean,
+    default: true,
   },
 } as const;
 

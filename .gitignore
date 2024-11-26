@@ -5,6 +5,7 @@ npm-debug.log*
 .env
 # Dependency directory
 node_modules
+dist
 
 # Optional npm cache directory
 .npm
