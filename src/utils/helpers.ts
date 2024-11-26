@@ -8,6 +8,7 @@ import * as CONSTS from './consts';
 import { IUserModel } from './types/user/types';
 import Forbidden from '../errors/Forbidden';
 import { IBoardModel } from './types/board/types';
+import { ITaskModel } from './types/task/types';
 
 dotenv.config();
 
@@ -110,6 +111,17 @@ export async function hasAccess(req: Request, errorMessage: string) {
   }
 }
 
+export function hasAccessForUpdateTaskWhereIsPinned(
+  req: Request,
+  task: ITaskModel
+) {
+  const reqUserId = decodeToken(req);
+
+  if (!task.pinnedUsers?.some((user) => user.toString() === reqUserId)) {
+    throw new Forbidden(CONSTS.ERR_FORBIDDEN_NO_RIGHTS_FOR_UPDATE_TASK);
+  }
+}
+
 export function getUserId(req: Request) {
   return decodeToken(req);
 }
@@ -124,6 +136,21 @@ export function createAnswerBoard(board: IBoardModel) {
       isActive: board.isActive,
       pinnedUsers: board.pinnedUsers,
       createdAt: board.createdAt,
+    },
+  };
+}
+
+export function createAnswerTask(task: ITaskModel) {
+  return {
+    task: {
+      id: task._id,
+      name: task.name,
+      description: task.description,
+      creatorId: task.creatorId,
+      isActive: task.isActive,
+      status: task.status,
+      pinnedUsers: task.pinnedUsers,
+      deadline: task.deadline,
     },
   };
 }

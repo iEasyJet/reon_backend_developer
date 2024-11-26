@@ -1,6 +1,7 @@
 export const ERR_SERVER = 'На сервере произошла ошибка';
 export const USER_DELETED = 'Пользователь удален';
 export const BOARD_DELETED = 'Доска удалена';
+export const TASK_DELETED = 'Задача удалена';
 
 /* CryptoJS */
 export const ERR_CRYPTO_ENCRYPT_PASSWORD = 'Ошибка при шифровании пароля';
@@ -40,6 +41,13 @@ export const ERR_NFE_BOARD_DELETE_USERS =
   'Ошибка при удалении пользователей к доске с переданным id';
 export const ERR_NFE_BOARD_UPDATE =
   'Ошибка при обновлении доски с переданным id';
+export const ERR_NFE_TASK_DELETE = 'Ошибка при удалении задачи с переданным id';
+export const ERR_NFE_TASK_UPDATE =
+  'Ошибка при обновлении задачи с переданным id';
+export const ERR_NFE_TASK_ADD_USERS =
+  'Ошибка при добавлении пользователей к задаче с переданным id';
+export const ERR_NFE_TASK_DELETE_USERS =
+  'Ошибка при удалении пользователей к задаче с переданным id';
 export const ERR_NFE_WRONG_ROUTE = 'Такого пути запроса не существует';
 
 /* Unauthorized */
@@ -62,3 +70,9 @@ export const ERR_FORBIDDEN_NO_RIGHTS_FOR_DELETE_USERS_FROM_BOARD =
   'У Вас нет прав для удаления пользователей доски. Права есть только у администратора';
 export const ERR_FORBIDDEN_NO_RIGHTS_FOR_UPDATE_BOARD =
   'У Вас нет прав для обновления доски. Права есть только у администратора';
+export const ERR_FORBIDDEN_NO_RIGHTS_FOR_UPDATE_TASK =
+  'У Вас нет прав для обновления задачи. Так как Вы не являетесь отвественным за задачу';
+export const ERR_FORBIDDEN_NO_RIGHTS_FOR_ADD_USERS_TO_TASK =
+  'У Вас нет прав для добавления пользователей задачи. Права есть только у администратора';
+export const ERR_FORBIDDEN_NO_RIGHTS_FOR_DELETE_USERS_FROM_TASK =
+  'У Вас нет прав для удаления пользователей задачи. Права есть только у администратора';

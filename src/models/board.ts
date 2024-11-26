@@ -22,7 +22,7 @@ export const boardSchemaDefinition = {
   pinnedUsers: [
     {
       type: mongoose.Types.ObjectId,
-      ref: 'user',
+      ref: 'User',
       required: true,
     },
   ],
