@@ -10,9 +10,9 @@ import { deleteUser } from '../controllers/user/deleteUser';
 
 const router = express.Router();
 
+router.post('/auth', verifyToken, checkToken);
 router.post('/create', verifyToken, createUser);
 router.post('/login', loginUser);
-router.post('/auth', verifyToken, checkToken);
 
 router.patch('/toggle-archive/:userId', verifyToken, toggleArchiveUser);
 

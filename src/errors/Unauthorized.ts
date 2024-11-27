@@ -3,7 +3,7 @@ class Unauthorized extends Error {
 
   constructor(message: string) {
     super(message);
-    this.statusCode = 400;
+    this.statusCode = 401;
     Object.setPrototypeOf(this, Unauthorized.prototype);
   }
 }

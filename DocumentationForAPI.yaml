@@ -1,0 +1,1539 @@
+openapi: 3.0.3
+info:
+  title: Тестовое Reon Березовский
+  description: Документация API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+tags:
+  - name: user
+    description: Операции с пользователем
+  - name: board
+    description: Операции с досками
+  - name: task
+    description: Операции с задачами доски
+paths:
+  /user/create:
+    post:
+      tags:
+        - user
+      summary: Создание пользователя
+      description: >-
+        Это может сделать только вошедший в систему пользователь и является
+        администратором.
+      security:
+        - bearerAuth: []  
+      requestBody:
+        required: true
+        description: В теле запроса передается логин и пароль для создания
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  minLength: 3
+                  maxLength: 30
+                  pattern: '^[a-zA-Z0-9]+$'
+                password:
+                  type: string
+                  format: password
+      responses:
+        '201':
+          description: Успех создания пользователя
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      role:
+                        type: string
+                        enum:
+                          - admin
+                          - user
+                        default: user
+                      isActive:
+                        type: boolean
+                        default: true
+        '403':
+          description: Ошибка права доступа для добавления пользователя. Право есть только у администратора.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: У Вас нет прав для создания пользователя. Права есть только у администратора.
+        '409':
+          description: Ошибка валидации данных
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Переданы некорректные данные
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+  /user/login:
+    post:
+      tags:
+        - user
+      summary: Авторизация пользователя
+      description: Может производить любой пользователь вне зависимости от роли его в программе
+      requestBody:
+        required: true
+        description: В теле запроса передается логин и пароль для создания
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  minLength: 3
+                  maxLength: 30
+                  pattern: '^[a-zA-Z0-9]+$'
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Успех создания пользователя
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      role:
+                        type: string
+                        enum:
+                          - admin
+                          - user
+                      isActive:
+                        type: boolean
+                  token:
+                    type: string
+        '401':
+          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Неправильный логин или пароль
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+  /user/auth:
+    post:
+      tags:
+        - user
+      summary: Аутентификация пользователя по токену
+      description: ''
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Успешная аутентификация
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      role:
+                        type: string
+                        enum:
+                          - admin
+                          - user
+                      isActive:
+                        type: boolean
+                  token:
+                    type: string
+        '401':
+          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Неправильный логин или пароль
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+  /user/toggle-archive/{userId}:
+    patch:
+      tags:
+        - user
+      summary: Смена активности пользователя активный/архив
+      description: Может производить только пользователь с ролью администратор
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          description: Идентификатор пользователя
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешное изменение статуса
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      role:
+                        type: string
+                        enum:
+                          - admin
+                          - user
+                      isActive:
+                        type: boolean
+        '401':
+          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Неправильный логин или пароль
+        '403':
+          description: Ошибка права доступа для изменения статуса пользователя. Право есть только у администратора.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: У Вас нет прав для смены статуса пользователя. Права есть только у администратора
+        '404':
+          description: Пользователь отсутсвует в системе.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка при смене статуса пользователя с переданным id
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+  /user/delete/{userId}:
+    delete:
+      tags:
+        - user
+      summary: Удаление пользователя системы
+      description: Может производить только пользователь с ролью администратор
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          description: Идентификатор пользователя
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Пользователь удален
+        '401':
+          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Неправильный логин или пароль
+        '403':
+          description: Ошибка права доступа для удаления пользователя. Право есть только у администратора.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: У Вас нет прав для удаления пользователя. Права есть только у администратора.
+        '404':
+          description: Пользователь отсутсвует в системе.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка при удалении пользователя с переданным id
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+#------
+  /board/create:
+    post:
+      tags:
+        - board
+      summary: Создание доски
+      description: >-
+        Это может сделать только вошедший в систему пользователь и является
+        администратором.
+      security:
+        - bearerAuth: []  
+      requestBody:
+        required: true
+        description: В теле запроса передаются данные для создания
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  default: Здесь должно быть название доски...
+                description:
+                  type: string
+                  default: Здесь должно быть описание доски...
+                pinnedUsers:
+                  type: array
+                  items:
+                    type: string
+                    description: Идентификатор пользователя
+      responses:
+        '201':
+          description: Успех создания доски
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  board:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      isActive:
+                        type: boolean
+                        default: true
+                      creatorId:
+                        type: string
+                        description: ID пользователя создавшего доску
+                      pinnedUsers:
+                        type: array
+                        items:
+                          type: string
+                          description: Идентификатор пользователя
+                      createdAt:
+                        type: number
+                        description: Дата создания доски
+        '401':
+          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Неправильный логин или пароль
+        '403':
+          description: Ошибка права доступа для создания доски. Право есть только у администратора.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: У Вас нет прав для создания доски. Права есть только у администратора.
+        '409':
+          description: Ошибка валидации данных
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Переданы некорректные данные
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+
+  /board/toggle-archive/{boardId}:
+    patch:
+      tags:
+        - board
+      summary: Смены статуса доски актуальная/архив
+      description: >-
+        Это может сделать только вошедший в систему пользователь и является
+        администратором.
+      security:
+        - bearerAuth: []  
+      parameters:
+        - in: path
+          name: boardId
+          description: Идентификатор доски
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успех изменения статуса доски
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  board:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      isActive:
+                        type: boolean
+                        default: true
+                      creatorId:
+                        type: string
+                        description: ID пользователя создавшего доску
+                      pinnedUsers:
+                        type: array
+                        items:
+                          type: string
+                          description: Идентификатор пользователя
+                      createdAt:
+                        type: number
+                        description: Дата создания доски
+        '401':
+          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Неправильный логин или пароль
+        '403':
+          description: Ошибка права доступа для обновления статуса доски. Право есть только у администратора.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: У Вас нет прав для обновления статуса доски. Права есть только у администратора.
+        '404':
+          description: Ошибка. Доска отсутсвует
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка при смене статуса доски с переданным id
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+                    
+  /board/add-users/{boardId}:
+    patch:
+      tags:
+        - board
+      summary: Добавление пользователей к доске
+      description: >-
+        Это может сделать только вошедший в систему пользователь и является
+        администратором.
+      security:
+        - bearerAuth: []  
+      parameters:
+        - in: path
+          name: boardId
+          description: Идентификатор доски
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        description: В теле запроса передается массив пользователей для добавления
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pinnedUsers:
+                  type: array
+                  items:
+                    type: string
+                    description: Идентификатор пользователя
+      responses:
+        '200':
+          description: Успех изменения доски
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  board:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      isActive:
+                        type: boolean
+                        default: true
+                      creatorId:
+                        type: string
+                        description: ID пользователя создавшего доску
+                      pinnedUsers:
+                        type: array
+                        items:
+                          type: string
+                          description: Идентификатор пользователя
+                      createdAt:
+                        type: number
+                        description: Дата создания доски
+        '401':
+          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Неправильный логин или пароль
+        '403':
+          description: Ошибка права доступа для обновления списка пользователей доски. Право есть только у администратора.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: У Вас нет прав для обновления списка пользователей доски. Права есть только у администратора.
+        '404':
+          description: Ошибка. Доска отсутсвует
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка при добавлении пользователей к доске с переданным id
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+                    
+  /board/delete-users/{boardId}:
+    patch:
+      tags:
+        - board
+      summary: Удаление пользователей из доски
+      description: >-
+        Это может сделать только вошедший в систему пользователь и является
+        администратором.
+      security:
+        - bearerAuth: []  
+      parameters:
+        - in: path
+          name: boardId
+          description: Идентификатор доски
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        description: В теле запроса передается массив пользователей для удаления
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pinnedUsers:
+                  type: array
+                  items:
+                    type: string
+                    description: Идентификатор пользователя
+      responses:
+        '200':
+          description: Успех изменения доски
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  board:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      isActive:
+                        type: boolean
+                        default: true
+                      creatorId:
+                        type: string
+                        description: ID пользователя создавшего доску
+                      pinnedUsers:
+                        type: array
+                        items:
+                          type: string
+                          description: Идентификатор пользователя
+                      createdAt:
+                        type: number
+                        description: Дата создания доски
+        '401':
+          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Неправильный логин или пароль
+        '403':
+          description: Ошибка права доступа для обновления списка пользователей доски. Право есть только у администратора.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: У Вас нет прав для удаления списка пользователей доски. Права есть только у администратора.
+        '404':
+          description: Ошибка. Доска отсутсвует
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка при удалении пользователей из доски с переданным id
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+                    
+  /board/update-board:
+    patch:
+      tags:
+        - board
+      summary: Обновление доски (Имя/описание)
+      description: >-
+        Это может сделать только вошедший в систему пользователь и является
+        администратором.
+      security:
+        - bearerAuth: []  
+      requestBody:
+        required: true
+        description: В теле запроса передаются id доски и имя/описание для изменения
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          description: Успех изменения доски
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  board:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      isActive:
+                        type: boolean
+                        default: true
+                      creatorId:
+                        type: string
+                        description: ID пользователя создавшего доску
+                      pinnedUsers:
+                        type: array
+                        items:
+                          type: string
+                          description: Идентификатор пользователя
+                      createdAt:
+                        type: number
+                        description: Дата создания доски
+        '401':
+          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Неправильный логин или пароль
+        '403':
+          description: Ошибка права доступа для обновления доски. Право есть только у администратора.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: У Вас нет прав для обновления доски. Права есть только у администратора.
+        '404':
+          description: Ошибка. Доска отсутсвует
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка при обновлении доски с переданным id
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+                    
+  /board/delete/{boardId}:
+    delete:
+      tags:
+        - board
+      summary: Удаление доски
+      description: >-
+        Это может сделать только вошедший в систему пользователь и является
+        администратором.
+      security:
+        - bearerAuth: []  
+      parameters:
+        - in: path
+          name: boardId
+          description: Идентификатор доски
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успех удаления доски
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Доска удалена
+                    
+        '401':
+          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Неправильный логин или пароль
+        '403':
+          description: Ошибка права доступа для удаления доски. Право есть только у администратора.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: У Вас нет прав для удаления доски. Права есть только у администратора.
+        '404':
+          description: Ошибка. Доска отсутсвует
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка при удалении доски с переданным id
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+                    
+#------
+  /task/create:
+    post:
+      tags:
+        - task
+      summary: Создание задачи
+      description: >-
+        Это может сделать любой пользователь
+      security:
+        - bearerAuth: []  
+      requestBody:
+        required: true
+        description: В теле запроса передается данные для создания
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  default: Здесь должно быть название задачи...
+                description:
+                  type: string
+                  default: Здесь должно быть описание задачи...
+                pinnedUsers:
+                  type: array
+                  items:
+                    type: string
+                    description: Идентификатор пользователя
+                deadline:
+                  type: number
+                  description: Дата окончания выполнения задачи
+                boardId:
+                  type: string
+                  description: ID доски. за которой закрепляется задача
+      responses:
+        '201':
+          description: Успех создания задачи
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name: 
+                        type: string
+                        default: Здесь должно быть название задачи...
+                      description:
+                        type: string
+                        default: Здесь должно быть описание задачи...
+                      pinnedUsers:
+                        type: array
+                        items:
+                          type: string
+                          description: Идентификатор пользователя
+                      deadline:
+                        type: number
+                        description: Дата окончания выполнения задачи
+                      boardId:
+                        type: string
+                        description: ID доски. за которой закрепляется задача
+                      isActive:
+                        type: boolean
+                        default: true
+                      creatorId:
+                        type: string
+                        description: ID пользователя создавшего задачу
+                      status:
+                        type: string
+                        enum: ['open', 'inProgress', 'completed']
+
+        '401':
+          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Неправильный логин или пароль
+        '409':
+          description: Ошибка валидации данных
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Переданы некорректные данные
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+                    
+  /task/toggle-archive/{taskId}:
+    patch:
+      tags:
+        - task
+      summary: Смена актуальности задачи/архив
+      description: >-
+        Это может сделать любой пользователь, который входит в список исполнителей
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: taskId
+          description: Идентификатор задачи
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успех изменения задачи
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name: 
+                        type: string
+                      description:
+                        type: string
+                      pinnedUsers:
+                        type: array
+                        items:
+                          type: string
+                          description: Идентификатор пользователя
+                      deadline:
+                        type: number
+                        description: Дата окончания выполнения задачи
+                      boardId:
+                        type: string
+                        description: ID доски. за которой закрепляется задача
+                      isActive:
+                        type: boolean
+                      creatorId:
+                        type: string
+                        description: ID пользователя создавшего задачу
+                      status:
+                        type: string
+                        enum: ['open', 'inProgress', 'completed']
+        '401':
+          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Неправильный логин или пароль
+        '403':
+          description: Ошибка прав
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: У Вас нет прав для обновления задачи. Так как Вы не являетесь отвественным за задачу
+        '404':
+          description: Карточки нет
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка при обновлении задачи с переданным id
+        '409':
+          description: Ошибка валидации данных
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Переданы некорректные данные
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+                    
+  /task/update-task:
+    patch:
+      tags:
+        - task
+      summary: Обновление задачи
+      description: >-
+        Это может сделать любой пользователь, который входит в список исполнителей
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: В теле запроса передается данные для обновления
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                name: 
+                  type: string
+                  default: Здесь должно быть название задачи...
+                description:
+                  type: string
+                  default: Здесь должно быть описание задачи...
+                deadline:
+                  type: number
+                  description: Дата окончания выполнения задачи
+                boardId:
+                  type: string
+                  description: ID доски. за которой закрепляется задача
+                status:
+                  type: string
+                  enum: ['open', 'inProgress', 'completed']
+      responses:
+        '200':
+          description: Успех изменения задачи
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name: 
+                        type: string
+                      description:
+                        type: string
+                      pinnedUsers:
+                        type: array
+                        items:
+                          type: string
+                          description: Идентификатор пользователя
+                      deadline:
+                        type: number
+                        description: Дата окончания выполнения задачи
+                      boardId:
+                        type: string
+                        description: ID доски. за которой закрепляется задача
+                      isActive:
+                        type: boolean
+                      creatorId:
+                        type: string
+                        description: ID пользователя создавшего задачу
+                      status:
+                        type: string
+                        enum: ['open', 'inProgress', 'completed']
+        '401':
+          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Неправильный логин или пароль
+        '403':
+          description: Ошибка прав
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: У Вас нет прав для обновления задачи. Так как Вы не являетесь отвественным за задачу
+        '404':
+          description: Карточки нет
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка при обновлении задачи с переданным id
+        '409':
+          description: Ошибка валидации данных
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Переданы некорректные данные
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+                    
+  /task/add-users/{taskId}:
+    patch:
+      tags:
+        - task
+      summary: Добавление пользователей к задаче
+      description: >-
+        Это может сделать только вошедший в систему пользователь и является
+        администратором.
+      security:
+        - bearerAuth: []  
+      parameters:
+        - in: path
+          name: taskId
+          description: Идентификатор задачи
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        description: В теле запроса передается массив пользователей для добавления
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pinnedUsers:
+                  type: array
+                  items:
+                    type: string
+                    description: Идентификатор пользователя
+      responses:
+        '200':
+          description: Успех изменения задачи
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name: 
+                        type: string
+                      description:
+                        type: string
+                      pinnedUsers:
+                        type: array
+                        items:
+                          type: string
+                          description: Идентификатор пользователя
+                      deadline:
+                        type: number
+                        description: Дата окончания выполнения задачи
+                      boardId:
+                        type: string
+                        description: ID доски. за которой закрепляется задача
+                      isActive:
+                        type: boolean
+                      creatorId:
+                        type: string
+                        description: ID пользователя создавшего задачу
+                      status:
+                        type: string
+                        enum: ['open', 'inProgress', 'completed']
+        '401':
+          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Неправильный логин или пароль
+        '403':
+          description: Ошибка права доступа для обновления списка пользователей задачи. Право есть только у администратора.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: У Вас нет прав для обновления списка пользователей задачи. Права есть только у администратора.
+        '404':
+          description: Ошибка. Задача отсутсвует
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка при добавлении пользователей к задаче с переданным id
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+                    
+  /task/delete-users/{taskId}:
+    patch:
+      tags:
+        - task
+      summary: Удаление пользователей из задачи
+      description: >-
+        Это может сделать только вошедший в систему пользователь и является
+        администратором.
+      security:
+        - bearerAuth: []  
+      parameters:
+        - in: path
+          name: taskId
+          description: Идентификатор задачи
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        description: В теле запроса передается массив пользователей для удаления
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pinnedUsers:
+                  type: array
+                  items:
+                    type: string
+                    description: Идентификатор пользователя
+      responses:
+        '200':
+          description: Успех изменения задачи
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name: 
+                        type: string
+                      description:
+                        type: string
+                      pinnedUsers:
+                        type: array
+                        items:
+                          type: string
+                          description: Идентификатор пользователя
+                      deadline:
+                        type: number
+                        description: Дата окончания выполнения задачи
+                      boardId:
+                        type: string
+                        description: ID доски. за которой закрепляется задача
+                      isActive:
+                        type: boolean
+                      creatorId:
+                        type: string
+                        description: ID пользователя создавшего задачу
+                      status:
+                        type: string
+                        enum: ['open', 'inProgress', 'completed']
+        '401':
+          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Неправильный логин или пароль
+        '403':
+          description: Ошибка права доступа для обновления списка пользователей задачи. Право есть только у администратора.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: У Вас нет прав для обновления списка пользователей задачи. Права есть только у администратора.
+        '404':
+          description: Ошибка. Задача отсутсвует
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка при удаления пользователей к задаче с переданным id
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+                    
+  /task/delete/{taskId}:
+    delete:
+      tags:
+        - task
+      summary: Удаление задачи
+      description: >-
+        Это может сделать пользователь, входящий в список ответсвенных
+      security:
+        - bearerAuth: []  
+      parameters:
+        - in: path
+          name: taskId
+          description: Идентификатор задачи
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успех удаления задачи
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Задача удалена
+                    
+        '401':
+          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Неправильный логин или пароль
+        '403':
+          description: Ошибка права доступа для удаления задачи. Право есть только у администратора.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: У Вас нет прав для удаления задачи. Права есть только у администратора.
+        '404':
+          description: Ошибка. Задача отсутсвует
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка при удалении задачи с переданным id
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ошибка сервера
+                    
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+
+

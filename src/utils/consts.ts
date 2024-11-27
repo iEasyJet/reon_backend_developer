@@ -57,6 +57,8 @@ export const ERR_NOAUTH = 'Неправильный логин или парол
 /* Forbidden */
 export const ERR_FORBIDDEN_NO_RIGHTS_FOR_DELETE_USER =
   'У Вас нет прав для удаления пользователя. Права есть только у администратора';
+export const ERR_FORBIDDEN_NO_RIGHTS_FOR_ADD_USER =
+  'У Вас нет прав для создания пользователя. Права есть только у администратора';
 export const ERR_FORBIDDEN_NO_RIGHTS_FOR_TOGGLE_ARCHIVE_USER =
   'У Вас нет прав для смены статуса пользователя. Права есть только у администратора';
 export const ERR_FORBIDDEN_NO_RIGHTS_FOR_CREATE_BOARD =

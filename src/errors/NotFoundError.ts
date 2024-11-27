@@ -3,7 +3,7 @@ class NotFoundError extends Error {
 
   constructor(message: string) {
     super(message);
-    this.statusCode = 400;
+    this.statusCode = 404;
     Object.setPrototypeOf(this, NotFoundError.prototype);
   }
 }

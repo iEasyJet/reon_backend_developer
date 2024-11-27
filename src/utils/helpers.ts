@@ -151,6 +151,7 @@ export function createAnswerTask(task: ITaskModel) {
       status: task.status,
       pinnedUsers: task.pinnedUsers,
       deadline: task.deadline,
+      boardId: task.boardId,
     },
   };
 }

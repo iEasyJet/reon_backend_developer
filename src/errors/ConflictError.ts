@@ -3,7 +3,7 @@ class ConflictError extends Error {
 
   constructor(message: string) {
     super(message);
-    this.statusCode = 400;
+    this.statusCode = 409;
     Object.setPrototypeOf(this, ConflictError.prototype);
   }
 }
