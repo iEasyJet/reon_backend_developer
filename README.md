@@ -10,6 +10,8 @@
 
 ## Для разворачивания проекта нужно:
 
+### Способ 1. Через docker hub
+
 В терминале прописать:
 
 - Создание директории `mkdir new-directory`
@@ -29,7 +31,7 @@ services:
     depends_on:
       - db
     environment:
-      - MONGO_URI=mongodb://db/reon_berezovsky
+      - MONGO_SERVER=mongodb://db/reon_berezovsky
       - NODE_ENV=dev
       - PORT=3000
       - SIMPLE_SECRET_KEY=dev-secret
@@ -49,6 +51,13 @@ services:
 
 - Сохранить содержимое файла docker-compose.yml
 - В терминале ввести команду `docker-compose up` она запустит два сервиса. Убедиться, что ничего больше не запущено на 3000 порту!
+- После сборки и получения лога о создании админа, можно тестировать
+
+### Способ 2. С помощтю настроенных файлов в текущем репозитории
+
+- В корне проекта открыть терминал
+- Ввести команду `docker-compose build`
+- Ввести команду `docker-compose up`
 - После сборки и получения лога о создании админа, можно тестировать
 
 BASE_URL: `http://localhost:3000`

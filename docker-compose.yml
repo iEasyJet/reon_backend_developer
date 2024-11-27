@@ -7,7 +7,7 @@ services:
     depends_on:
       - db
     environment:
-      - MONGO_URI=mongodb://db/reon_berezovsky
+      - MONGO_SERVER=mongodb://db/reon_berezovsky
 
   db:
     image: mongo
