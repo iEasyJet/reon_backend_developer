@@ -24,7 +24,7 @@ export async function addUsersToBoard(
     );
 
     if (!updatedBoard) {
-      throw new NotFoundError(CONSTS.ERR_NFE_BOARD_ADD_USERS);
+      throw new NotFoundError(CONSTS.ERR_NFE_BOARD);
     }
 
     res.status(200).send(createAnswerBoard(updatedBoard));

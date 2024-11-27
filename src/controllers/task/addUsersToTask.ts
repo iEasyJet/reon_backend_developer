@@ -24,7 +24,7 @@ export async function addUsersToTask(
     );
 
     if (!updatedTask) {
-      throw new NotFoundError(CONSTS.ERR_NFE_TASK_ADD_USERS);
+      throw new NotFoundError(CONSTS.ERR_NFE_TASK);
     }
 
     res.status(200).send(createAnswerTask(updatedTask));

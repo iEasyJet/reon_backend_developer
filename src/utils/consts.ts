@@ -30,25 +30,9 @@ export const ERR_VE = 'Переданы некорректные данные';
 export const ERR_CE = 'Данная сущность уже существует в базе данных';
 
 /* NotFoundError */
-export const ERR_NFE_USER = 'Ошибка при удалении пользователя с переданным id';
-export const ERR_NFE_BOARD = 'Ошибка при удалении доски с переданным id';
-export const ERR_NFE_USER_TOGGLE_STATUS =
-  'Ошибка при смене статуса пользователя с переданным id';
-export const ERR_NFE_BOARD_TOGGLE_STATUS =
-  'Ошибка при смене статуса доски с переданным id';
-export const ERR_NFE_BOARD_ADD_USERS =
-  'Ошибка при добавлении пользователей к доске с переданным id';
-export const ERR_NFE_BOARD_DELETE_USERS =
-  'Ошибка при удалении пользователей к доске с переданным id';
-export const ERR_NFE_BOARD_UPDATE =
-  'Ошибка при обновлении доски с переданным id';
-export const ERR_NFE_TASK_DELETE = 'Ошибка при удалении задачи с переданным id';
-export const ERR_NFE_TASK_UPDATE =
-  'Ошибка при обновлении задачи с переданным id';
-export const ERR_NFE_TASK_ADD_USERS =
-  'Ошибка при добавлении пользователей к задаче с переданным id';
-export const ERR_NFE_TASK_DELETE_USERS =
-  'Ошибка при удалении пользователей к задаче с переданным id';
+export const ERR_NFE_USER = 'Пользователь с переданным id не найден';
+export const ERR_NFE_BOARD = 'Доска с переданным id не найдена';
+export const ERR_NFE_TASK = 'Задача с переданным id не найдена';
 export const ERR_NFE_WRONG_ROUTE = 'Такого пути запроса не существует';
 
 /* Unauthorized */

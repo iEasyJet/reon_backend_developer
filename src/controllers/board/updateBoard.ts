@@ -28,7 +28,7 @@ export async function updateBoard(
     );
 
     if (!updatedBoard) {
-      throw new NotFoundError(CONSTS.ERR_NFE_BOARD_UPDATE);
+      throw new NotFoundError(CONSTS.ERR_NFE_BOARD);
     }
 
     res.status(200).send(createAnswerBoard(updatedBoard));

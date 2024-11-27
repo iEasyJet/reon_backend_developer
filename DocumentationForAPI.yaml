@@ -140,7 +140,7 @@ paths:
                   token:
                     type: string
         '401':
-          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          description: Неправильный логин или пароль
           content:
             application/json:
               schema:
@@ -192,7 +192,7 @@ paths:
                   token:
                     type: string
         '401':
-          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          description: Неправильный логин или пароль
           content:
             application/json:
               schema:
@@ -211,6 +211,7 @@ paths:
                   message:
                     type: string
                     default: Ошибка сервера
+                    
   /user/toggle-archive/{userId}:
     patch:
       tags:
@@ -249,7 +250,7 @@ paths:
                       isActive:
                         type: boolean
         '401':
-          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          description: Неправильный логин или пароль
           content:
             application/json:
               schema:
@@ -277,7 +278,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    default: Ошибка при смене статуса пользователя с переданным id
+                    default: Пользователь с переданным id не найден
         '500':
           description: Ошибка сервера
           content:
@@ -288,6 +289,7 @@ paths:
                   message:
                     type: string
                     default: Ошибка сервера
+                    
   /user/delete/{userId}:
     delete:
       tags:
@@ -315,7 +317,7 @@ paths:
                     type: string
                     default: Пользователь удален
         '401':
-          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          description: Неправильный логин или пароль
           content:
             application/json:
               schema:
@@ -343,7 +345,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    default: Ошибка при удалении пользователя с переданным id
+                    default: Пользователь с переданным id не найден
         '500':
           description: Ошибка сервера
           content:
@@ -416,7 +418,7 @@ paths:
                         type: number
                         description: Дата создания доски
         '401':
-          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          description: Неправильный логин или пароль
           content:
             application/json:
               schema:
@@ -492,7 +494,6 @@ paths:
                         type: string
                       isActive:
                         type: boolean
-                        default: true
                       creatorId:
                         type: string
                         description: ID пользователя создавшего доску
@@ -505,7 +506,7 @@ paths:
                         type: number
                         description: Дата создания доски
         '401':
-          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          description: Неправильный логин или пароль
           content:
             application/json:
               schema:
@@ -533,7 +534,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    default: Ошибка при смене статуса доски с переданным id
+                    default: Доска с переданным id не найдена
         '500':
           description: Ошибка сервера
           content:
@@ -594,7 +595,6 @@ paths:
                         type: string
                       isActive:
                         type: boolean
-                        default: true
                       creatorId:
                         type: string
                         description: ID пользователя создавшего доску
@@ -607,7 +607,7 @@ paths:
                         type: number
                         description: Дата создания доски
         '401':
-          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          description: Неправильный логин или пароль
           content:
             application/json:
               schema:
@@ -635,7 +635,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    default: Ошибка при добавлении пользователей к доске с переданным id
+                    default: Доска с переданным id не найдена
         '500':
           description: Ошибка сервера
           content:
@@ -696,7 +696,6 @@ paths:
                         type: string
                       isActive:
                         type: boolean
-                        default: true
                       creatorId:
                         type: string
                         description: ID пользователя создавшего доску
@@ -709,7 +708,7 @@ paths:
                         type: number
                         description: Дата создания доски
         '401':
-          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          description: Неправильный логин или пароль
           content:
             application/json:
               schema:
@@ -737,7 +736,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    default: Ошибка при удалении пользователей из доски с переданным id
+                    default: Доска с переданным id не найдена
         '500':
           description: Ошибка сервера
           content:
@@ -792,7 +791,7 @@ paths:
                         type: string
                       isActive:
                         type: boolean
-                        default: true
+
                       creatorId:
                         type: string
                         description: ID пользователя создавшего доску
@@ -805,7 +804,7 @@ paths:
                         type: number
                         description: Дата создания доски
         '401':
-          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          description: Неправильный логин или пароль
           content:
             application/json:
               schema:
@@ -833,7 +832,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    default: Ошибка при обновлении доски с переданным id
+                    default: Доска с переданным id не найдена
         '500':
           description: Ошибка сервера
           content:
@@ -875,7 +874,7 @@ paths:
                     default: Доска удалена
                     
         '401':
-          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          description: Неправильный логин или пароль
           content:
             application/json:
               schema:
@@ -903,7 +902,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    default: Ошибка при удалении доски с переданным id
+                    default: Доска с переданным id не найдена
         '500':
           description: Ошибка сервера
           content:
@@ -988,10 +987,13 @@ paths:
                         description: ID пользователя создавшего задачу
                       status:
                         type: string
-                        enum: ['open', 'inProgress', 'completed']
+                        enum: 
+                          - open
+                          - inProgress
+                          - completed
 
         '401':
-          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          description: Неправильный логин или пароль
           content:
             application/json:
               schema:
@@ -1072,9 +1074,12 @@ paths:
                         description: ID пользователя создавшего задачу
                       status:
                         type: string
-                        enum: ['open', 'inProgress', 'completed']
+                        enum: 
+                          - open
+                          - inProgress
+                          - completed
         '401':
-          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          description: Неправильный логин или пароль
           content:
             application/json:
               schema:
@@ -1094,7 +1099,7 @@ paths:
                     type: string
                     default: У Вас нет прав для обновления задачи. Так как Вы не являетесь отвественным за задачу
         '404':
-          description: Карточки нет
+          description: Задача с переданным id не найдена
           content:
             application/json:
               schema:
@@ -1102,7 +1107,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    default: Ошибка при обновлении задачи с переданным id
+                    default: Задача с переданным id не найдена
         '409':
           description: Ошибка валидации данных
           content:
@@ -1157,7 +1162,10 @@ paths:
                   description: ID доски. за которой закрепляется задача
                 status:
                   type: string
-                  enum: ['open', 'inProgress', 'completed']
+                  enum: 
+                    - open
+                    - inProgress
+                    - completed
       responses:
         '200':
           description: Успех изменения задачи
@@ -1193,9 +1201,12 @@ paths:
                         description: ID пользователя создавшего задачу
                       status:
                         type: string
-                        enum: ['open', 'inProgress', 'completed']
+                        enum: 
+                          - open
+                          - inProgress
+                          - completed
         '401':
-          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          description: Неправильный логин или пароль
           content:
             application/json:
               schema:
@@ -1215,7 +1226,7 @@ paths:
                     type: string
                     default: У Вас нет прав для обновления задачи. Так как Вы не являетесь отвественным за задачу
         '404':
-          description: Карточки нет
+          description: Задача с переданным id не найдена
           content:
             application/json:
               schema:
@@ -1223,7 +1234,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    default: Ошибка при обновлении задачи с переданным id
+                    default: Задача с переданным id не найдена
         '409':
           description: Ошибка валидации данных
           content:
@@ -1310,9 +1321,12 @@ paths:
                         description: ID пользователя создавшего задачу
                       status:
                         type: string
-                        enum: ['open', 'inProgress', 'completed']
+                        enum:
+                          - open
+                          - inProgress
+                          - completed
         '401':
-          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          description: Неправильный логин или пароль
           content:
             application/json:
               schema:
@@ -1332,7 +1346,7 @@ paths:
                     type: string
                     default: У Вас нет прав для обновления списка пользователей задачи. Права есть только у администратора.
         '404':
-          description: Ошибка. Задача отсутсвует
+          description: Задача с переданным id не найдена
           content:
             application/json:
               schema:
@@ -1340,7 +1354,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    default: Ошибка при добавлении пользователей к задаче с переданным id
+                    default: Задача с переданным id не найдена
         '500':
           description: Ошибка сервера
           content:
@@ -1417,9 +1431,12 @@ paths:
                         description: ID пользователя создавшего задачу
                       status:
                         type: string
-                        enum: ['open', 'inProgress', 'completed']
+                        enum: 
+                          - open
+                          - inProgress
+                          - completed
         '401':
-          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          description: Неправильный логин или пароль
           content:
             application/json:
               schema:
@@ -1439,7 +1456,7 @@ paths:
                     type: string
                     default: У Вас нет прав для обновления списка пользователей задачи. Права есть только у администратора.
         '404':
-          description: Ошибка. Задача отсутсвует
+          description: Задача с переданным id не найдена
           content:
             application/json:
               schema:
@@ -1447,7 +1464,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    default: Ошибка при удаления пользователей к задаче с переданным id
+                    default: Задача с переданным id не найдена
         '500':
           description: Ошибка сервера
           content:
@@ -1488,7 +1505,7 @@ paths:
                     default: Задача удалена
                     
         '401':
-          description: Ошибка в отсутсвии пользователя или пароли не совпали
+          description: Неправильный логин или пароль
           content:
             application/json:
               schema:
@@ -1508,7 +1525,7 @@ paths:
                     type: string
                     default: У Вас нет прав для удаления задачи. Права есть только у администратора.
         '404':
-          description: Ошибка. Задача отсутсвует
+          description: Задача с переданным id не найдена
           content:
             application/json:
               schema:
@@ -1516,7 +1533,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    default: Ошибка при удалении задачи с переданным id
+                    default: Задача с переданным id не найдена
         '500':
           description: Ошибка сервера
           content:

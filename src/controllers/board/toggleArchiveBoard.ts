@@ -21,7 +21,7 @@ export async function toggleArchiveBoard(
     const board = await Board.findById(boardId);
 
     if (!board) {
-      throw new NotFoundError(CONSTS.ERR_NFE_BOARD_TOGGLE_STATUS);
+      throw new NotFoundError(CONSTS.ERR_NFE_BOARD);
     }
 
     const updatedBoard = await Board.findByIdAndUpdate(
@@ -33,7 +33,7 @@ export async function toggleArchiveBoard(
     );
 
     if (!updatedBoard) {
-      throw new NotFoundError(CONSTS.ERR_NFE_BOARD_TOGGLE_STATUS);
+      throw new NotFoundError(CONSTS.ERR_NFE_BOARD);
     }
 
     res.status(200).send(createAnswerBoard(updatedBoard));

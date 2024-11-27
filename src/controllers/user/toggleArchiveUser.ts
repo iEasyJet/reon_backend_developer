@@ -21,7 +21,7 @@ export async function toggleArchiveUser(
     const user = await User.findById(userId);
 
     if (!user) {
-      throw new NotFoundError(CONSTS.ERR_NFE_USER_TOGGLE_STATUS);
+      throw new NotFoundError(CONSTS.ERR_NFE_USER);
     }
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -33,7 +33,7 @@ export async function toggleArchiveUser(
     );
 
     if (!updatedUser) {
-      throw new NotFoundError(CONSTS.ERR_NFE_USER_TOGGLE_STATUS);
+      throw new NotFoundError(CONSTS.ERR_NFE_USER);
     }
 
     res.status(200).send(createAnswerUser(updatedUser));

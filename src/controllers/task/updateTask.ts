@@ -20,7 +20,7 @@ export async function updateTask(
   try {
     const task = await Task.findById(id);
     if (!task) {
-      throw new NotFoundError(CONSTS.ERR_NFE_TASK_UPDATE);
+      throw new NotFoundError(CONSTS.ERR_NFE_TASK);
     }
 
     hasAccessForUpdateTaskWhereIsPinned(req, task);
@@ -34,7 +34,7 @@ export async function updateTask(
     );
 
     if (!updatedTask) {
-      throw new NotFoundError(CONSTS.ERR_NFE_TASK_UPDATE);
+      throw new NotFoundError(CONSTS.ERR_NFE_TASK);
     }
 
     res.status(200).send(createAnswerTask(updatedTask));

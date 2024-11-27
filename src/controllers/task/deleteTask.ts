@@ -16,7 +16,7 @@ export async function deleteTask(
   try {
     const task = await Task.findById(taskId);
     if (!task) {
-      throw new NotFoundError(CONSTS.ERR_NFE_TASK_DELETE);
+      throw new NotFoundError(CONSTS.ERR_NFE_TASK);
     }
 
     hasAccessForUpdateTaskWhereIsPinned(req, task);

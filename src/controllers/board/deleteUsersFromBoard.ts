@@ -36,7 +36,7 @@ export async function deleteUsersFromBoard(
     );
 
     if (!updatedBoard) {
-      throw new NotFoundError(CONSTS.ERR_NFE_BOARD_DELETE_USERS);
+      throw new NotFoundError(CONSTS.ERR_NFE_BOARD);
     }
 
     res.status(200).send(createAnswerBoard(updatedBoard));

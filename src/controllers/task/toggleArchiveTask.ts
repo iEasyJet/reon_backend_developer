@@ -19,7 +19,7 @@ export async function toggleArchiveTask(
     const task = await Task.findById(taskId);
 
     if (!task) {
-      throw new NotFoundError(CONSTS.ERR_NFE_TASK_UPDATE);
+      throw new NotFoundError(CONSTS.ERR_NFE_TASK);
     }
 
     hasAccessForUpdateTaskWhereIsPinned(req, task);
@@ -33,7 +33,7 @@ export async function toggleArchiveTask(
     );
 
     if (!updatedTask) {
-      throw new NotFoundError(CONSTS.ERR_NFE_TASK_UPDATE);
+      throw new NotFoundError(CONSTS.ERR_NFE_TASK);
     }
 
     res.status(200).send(createAnswerTask(updatedTask));
